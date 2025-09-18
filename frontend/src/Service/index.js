@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8082/tasks";
+const API_URL = "https://task-manager-gflq.onrender.com/tasks";
 
 export const fetchTasks = async () => {
   const response = await axios.get(API_URL);
@@ -27,3 +27,17 @@ export const deleteTask = async (taskId) => {
 export const markTaskAsDone = async (taskId) => {
   await axios.patch(`${API_URL}/${taskId}/status`, { status: "DONE" });
 };
+
+export const downloadFile = async (filename) => {
+  const response = await axios.get(`${API_URL}/download/${filename}`, {
+        responseType: "blob", // receive as binary
+      });
+  return response
+}
+
+export const previewFile = async (filename) => {
+  const response = await axios.get(`${API_URL}/preview/${filename}`, {
+        responseType: "blob", // receive as binary
+      });
+  return response
+}

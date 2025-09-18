@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { TaskContext } from "../../Context/TaskContext";
 import { useTasks } from "../../CustomHooks/useTasks";
 import { enqueueSnackbar } from "notistack";
-import { deleteTask, markTaskAsDone } from "../../Service";
+import { deleteTask, downloadFile, markTaskAsDone, previewFile } from "../../Service";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from "axios";
 
@@ -44,11 +44,9 @@ export default function TaskActions({ task}) {
 
 
 
-const handleDownload = async (filename) => {
+const handleDownload =  (filename) => {
   try {
-    const response = await axios.get(`http://localhost:8082/tasks/download/${filename}`, {
-      responseType: "blob", // important for binary data
-    });
+    const response = downloadFile(filename);
 
     // ✅ Create a blob URL and trigger download
     const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -66,10 +64,7 @@ const handleDownload = async (filename) => {
 
 const handlePreview = async (filename) => {
     try {
-      const response = await axios.get(`http://localhost:8082/tasks/preview/${filename}`, {
-        responseType: "blob", // receive as binary
-      });
-
+      const response = previewFile(filename);
       const file = new Blob([response.data], { type: response.data.type || "application/octet-stream" });
       const url = window.URL.createObjectURL(file);
       window.open(url, "_blank");
